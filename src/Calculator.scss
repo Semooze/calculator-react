@@ -1,0 +1,49 @@
+
+$blue: #30C5FF;
+$light-blue: #00F6ED;
+$dark-blue: #5B7AD6;
+$purple: #9159BF;
+$black: #25282E;
+
+.calculator {
+  margin-top: 5%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 300px;
+  height: 600px;
+}
+.monitor-panel {
+  padding: 10px;
+  border: 3px solid $black;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.input-panel {
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+  grid-template-rows: 20% 20% 20% 20% 20%;
+  border: 3px solid $black;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  
+  div {
+    width: 50%;
+    height: 80%;
+    margin: 5px;
+    border: 3px solid $black;
+    justify-self: center;
+    display: flex;
+    justify-content: center;
+    align-items:center; 
+    
+    &:hover {
+      background-color: $blue;
+    }
+    
+    &:active {
+      background-color: $dark-blue;
+    }
+  }
+}
+
