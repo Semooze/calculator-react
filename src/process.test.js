@@ -19,9 +19,29 @@ describe("Add value", function () {
     expect(addValue(init, "+")).toBe("0");
   });
 
+  test("add 4 expect value \"-\"", function () {
+    init = "(";
+    expect(addValue(init, "4")).toBe("( 4");
+  });
+
+  test("add - expect value \"-\"", function () {
+    init = "";
+    expect(addValue(init, "-")).toBe("-");
+  });
+
   test("add + expect value \"\"", function () {
     init = "";
     expect(addValue(init, "+")).toBe("");
+  });
+
+  test("add * expect value \"\"", function () {
+    init = "";
+    expect(addValue(init, "*")).toBe("");
+  });
+
+  test("add / expect value \"\"", function () {
+    init = "";
+    expect(addValue(init, "/")).toBe("");
   });
 
   test("add 1 expect value \"1\"", function () {
@@ -47,6 +67,66 @@ describe("Add value", function () {
   test("add - expect value \"12 - \"", function () {
     init = "12 + ";
     expect(addValue(init, '-')).toBe("12 - ");
+  });
+
+  test("add + expect value \"12 + \"", function () {
+    init = "12 - ";
+    expect(addValue(init, '+')).toBe("12 + ");
+  });
+
+  test("add * expect value \"6 * \"", function () {
+    init = "6 + ";
+    expect(addValue(init, '*')).toBe("6 * ");
+  });
+
+  test("add / expect value \"6 / \"", function () {
+    init = "6 + ";
+    expect(addValue(init, '/')).toBe("6 / ");
+  });
+
+  test("add * expect value \"6 * \"", function () {
+    init = "6 - ";
+    expect(addValue(init, '*')).toBe("6 * ");
+  });
+
+  test("add / expect value \"6 / \"", function () {
+    init = "6 - ";
+    expect(addValue(init, '/')).toBe("6 / ");
+  });
+
+  test("add - expect value \"6 - \"", function () {
+    init = "6 - ";
+    expect(addValue(init, '-')).toBe("6 - ");
+  });
+
+  test("add + expect value \"6 + \"", function () {
+    init = "6 + ";
+    expect(addValue(init, '+')).toBe("6 + ");
+  });
+
+  test("add * expect value \"6 * \"", function () {
+    init = "6 * ";
+    expect(addValue(init, '*')).toBe("6 * ");
+  });
+
+  test("add / expect value \"6 / \"", function () {
+    init = "6 / ";
+    expect(addValue(init, '/')).toBe("6 / ");
+  });
+
+  test("add - expect value \"6 * - \"", function () {
+    init = "6 * ";
+    expect(addValue(init, '-')).toBe("6 * -");
+  });
+
+  test("add - expect value \"6 / - \"", function () {
+    init = "6 / ";
+    expect(addValue(init, '-')).toBe("6 / -");
+  });
+
+  test("add 4 expect value \"6 / -4 \"", function () {
+    init = "6 / -";
+    expect(addValue(init, '4')).toBe("6 / -4");
   });
 
   test("add 7 expect value \"12 - 7\"", function () {
@@ -89,9 +169,9 @@ describe("Add value", function () {
     expect(addValue(init)).toBe(init);
   });
 
-  test("add \"(8 +4 )\" expect value \"(8 +4 )\"", function () {
-    init = "(8 + 4)";
-    expect(addValue(init)).toBe("(8 + 4)");
+  test("add \"( 8 +4 )\" expect value \"( 8 + 4 )\"", function () {
+    init = "( 8 + 4 )";
+    expect(addValue(init)).toBe("( 8 + 4 )");
   });
 
   test("add 2 * 10 expect value 2 * 10", function () {
@@ -102,6 +182,41 @@ describe("Add value", function () {
   test("add 2 / 10 expect value 2 / 10", function () {
     init = "2 / 10";
     expect(addValue(init)).toBe("2 / 10");
+  });
+
+  test("add ( expect value 2 + ( ", function () {
+    init = "2 + ";
+    expect(addValue(init, "(")).toBe("2 + ( ");
+  });
+
+  test("add 5 expect value 2 + ( 5", function () {
+    init = "2 + ( ";
+    expect(addValue(init, "5")).toBe("2 + ( 5");
+  });
+
+  test("add ) expect value 2 + ( 5 + 2 )", function () {
+    init = "2 + ( 5 + 2";
+    expect(addValue(init, ")")).toBe("2 + ( 5 + 2 )");
+  });
+  
+  test("add 2 expect value 2 + ( 5 + 2 ) + 2", function () {
+    init = "2 + ( 5 + 2 ) + ";
+    expect(addValue(init, "2")).toBe("2 + ( 5 + 2 ) + 2");
+  });
+
+  test("add 2 expect value 2 + ( 5 + 2 )", function () {
+    init = "2 + ( 5 + 2 )";
+    expect(addValue(init, "2")).toBe("2 + ( 5 + 2 )");
+  });
+
+  test("add + expect value 2 + ( 5 + 2 )", function () {
+    init = "2 + ( 5 + 2 )";
+    expect(addValue(init, "+")).toBe("2 + ( 5 + 2 ) + ");
+  });
+
+  test("add ( expect value 2 + ( 5 + 2", function () {
+    init = "2 + ( 5 + 2";
+    expect(addValue(init, "(")).toBe("2 + ( 5 + 2");
   });
 
 });
@@ -230,6 +345,10 @@ describe("Transform infix to postfix", function () {
        "to [-7, , 9, 5, 3, \"+\", 2, \"/\", \"*\", \"+\", 8, \"+\", 1, \"-\"]", function () {
     expect(infixToPostfix([-7, "+", 9, "*", "(", "(", 5, "+", 3, ")", "/", 2, ")", "+", 8, "-", 1]))
       .toEqual([-7, 9, 5, 3, "+", 2, "/", "*", "+", 8, "+", 1, "-"]);
+  });
+
+  test("take [70, \"*\", 2, \"-\", 5, \"*\", 6] to [70, 2, \"*\", 5, 6, \"*\", \"-\"]", function () {
+    expect(infixToPostfix([70, "*", 2, "-", 5, "*", 6])).toEqual([70, 2, "*", 5, 6, "*", "-"]);
   });
 
 });

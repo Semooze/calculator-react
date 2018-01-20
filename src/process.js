@@ -2,6 +2,10 @@ function isNumber(n) {
     return !Number.isNaN(n) && Number.isFinite(n);
 }
 
+function isOperator(n) {
+    return (n === "+" || n === "-" || n === "*" || n === "/") ? true: false;
+}
+
 function precisionRound(number, precision) {
     var factor = Math.pow(10, precision);
     return Math.round(number * factor) / factor;
@@ -80,7 +84,7 @@ function infixToPostfix(infix) {
             }
         });
 
-        if (stack.length) postfix.push(stack.pop());
+        if (stack.length) stack.reverse().forEach( (operator) => postfix.push(operator) );
         return postfix;
     }
     return [];
@@ -125,18 +129,30 @@ function determine(postfix) {
 
 function addValue(display, value) {
     if (display === "" || display === "0") {
-        return (value === "+") ? display : `${value}`;
+        return (value === "+" || value === "*" || value === "/" || value === ")") ? display : `${value}`;
     }
 
     if (!value) {
         return display;
     }
 
-    if (isNumber(parseFloat(value, 10))) {
-        return display + value;
+    var lastCharacter = display.trim().split(" ").pop();
+
+    if (lastCharacter === ")") {
+        return isOperator(value) ? display + ` ${value} `: display;
     }
 
-    var lastCharacter = display.trim().split(" ").pop();
+    if (isNumber(parseFloat(value, 10))) {
+        return (display === "(") ? display + ` ${value}`: display + value;
+    }
+
+    if (value === "(") {
+        return isNumber(parseFloat(lastCharacter, 10)) ? display: display + `${value} `;
+    }
+
+    if (value === ")") {
+        return isNumber(parseFloat(lastCharacter, 10)) ? display + ` ${value}`: display;
+    }
 
     if (display.length === 1 && lastCharacter === "-") {
         if (value === "+") return "";
@@ -144,12 +160,17 @@ function addValue(display, value) {
         return `-${value}`;
     }
 
-    if (lastCharacter === "+") {
+    if (lastCharacter === "*" || lastCharacter === "/") {
+        return (value === "-") ?  display + `${value}`
+        :display.split(" ").slice(0, -2).join(" ") + ` ${value} `;
+    }
+
+    if (lastCharacter === "-" || lastCharacter === "+") {
         return display.split(" ").slice(0, -2).join(" ") + ` ${value} `;
     }
 
-    if (lastCharacter === "-") {
-        return display.split(" ").slice(0, -2).join(" ") + ` ${value} `;
+    if (lastCharacter === "(") {
+        return isNumber(parseFloat(value, 10)) ? display + value: display;
     }
 
     return display + ` ${value} `;
