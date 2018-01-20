@@ -157,6 +157,16 @@ describe("Transform display to infix", function () {
     expect(displayToInfix(init)).toEqual([2, "/", 10]);
   });
 
+  test("take \"0.005 * 2 + 3\" to [0.005, \"*\", 2, \"+\", 3]", function () {
+    init = "0.005 * 2 + 3";
+    expect(displayToInfix(init)).toEqual([0.005, "*", 2, "+", 3]);
+  });
+
+  test("take \"-12.5 * 2 + 3\" to [0.005, \"*\", 2, \"+\", 3]", function () {
+    init = "-12.5 * 2 + 3";
+    expect(displayToInfix(init)).toEqual([-12.5, "*", 2, "+", 3]);
+  });
+
 });
 
 describe("Transform infix to postfix", function () {
@@ -216,6 +226,12 @@ describe("Transform infix to postfix", function () {
       .toEqual([7, "-", 9, 5, 3, "+", 2, "/", "*", "+", 8, "+", 1, "-"]);
   });
 
+  test("take [-7, \"+\", 9, \"*\", \"(\", \"(\", 5, \"+\", 3, \")\", \"/\", 2, \")\", \"+\", 8, \"-\", 1]" + 
+       "to [-7, , 9, 5, 3, \"+\", 2, \"/\", \"*\", \"+\", 8, \"+\", 1, \"-\"]", function () {
+    expect(infixToPostfix([-7, "+", 9, "*", "(", "(", 5, "+", 3, ")", "/", 2, ")", "+", 8, "-", 1]))
+      .toEqual([-7, 9, 5, 3, "+", 2, "/", "*", "+", 8, "+", 1, "-"]);
+  });
+
 });
 
 describe("Determine an anwser", function () {
@@ -232,50 +248,54 @@ describe("Determine an anwser", function () {
     expect(determine([])).toBe(0);
   });
 
-  test("take 23 + to 0", function () {
+  test("take [23, \"+\"] to 0", function () {
     expect(determine([23, "+"])).toBe(0);
   });
 
-  test("take 23 5 + to 28", function () {
+  test("take [23, 5, \"+\"] to 28", function () {
     expect(determine([23, 5, "+"])).toBe(28);
   });
 
-  test("take 10 + 2 - 8 + 3 to 7", function () {
+  test("take [10, 2, \"+\", 8, \"-\", 3, \"+\"] to 7", function () {
     expect(determine([10, 2, "+", 8, "-", 3, "+"])).toBe(7);
   });
 
-  test("take 23 + 5 - to 0", function () {
+  test("take [23, 5,\"+\", \"-\"] to 0", function () {
     expect(determine([23, 5, "+", "-"])).toBe(0);
   });
 
-  test("take -7 + 8 - 4 to -3", function () {
+  test("take [-7, 8, \"+\", 4, \"-\"] to -3", function () {
     expect(determine([-7, 8, "+", 4, "-"])).toBe(-3);
   });
 
-  test("take 8 - 8 + 1 to 1", function () {
+  test("take [8, 8, \"-\", 1, \"+\"] to 1", function () {
     expect(determine([8, 8, "-", 1, "+"])).toBe(1);
   });
 
-  test("take 2 * 10 to 20", function () {
+  test("take [2, 10, \"*\"] to 20", function () {
     expect(determine([2, 10, "*"])).toBe(20);
   });
 
-  test("take 2 / 10 to 0.2", function () {
+  test("take [2, 10, \"/\"] to 0.2", function () {
     expect(determine([2, 10, "/"])).toBe(0.2);
   });
 
-  // test("take 2 + 8 * 10 to 160", function () {
-  //   expect(determine([2, 8, "+", 10, "*"])).toBe(160);
-  // });
+  test("take [2, 8, 10, \"*\", \"+\"] to 160", function () {
+    expect(determine([2, 8, 10, "*", "+"])).toBe(82);
+  });
 
-  // test("take 8 + 7 /2 to 11.5", function () {
-  //   expect(determine([8, 7, "+", 2, "/"])).toBe(11.5);
-  // });
+  test("take [1, 2, \"+\", 3, 4, \"+\", \"/\"] to 11.5", function () {
+    expect(determine([1, 2, "+", 3, 4, "+", "/"])).toBe(0.4285714285714286);
+  });
+
+  test("take [-7, 9, 5, 3, \"+\", 2, \"/\", \"*\", \"+\", 8, \"+\", 1, \"-\"] to 11.5", function () {
+    expect(determine([-7, 9, 5, 3, "+", 2, "/", "*", "+", 8, "+", 1, "-"])).toBe(36);
+  });
 
 });
 
 /*Left test case
-1 Flotaing point
+Optional
 2 Handle negative number in new way when tranforming it from display to infix
 3 Handle negative number in new way when determine from postfix
 */ 

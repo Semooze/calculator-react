@@ -2,6 +2,12 @@ function isNumber(n) {
     return !Number.isNaN(n) && Number.isFinite(n);
 }
 
+function precisionRound(number, precision) {
+    var factor = Math.pow(10, precision);
+    return Math.round(number * factor) / factor;
+}
+  
+
 function checkPrecedence(value1, operator, value2) {
     if (value1 === "+" || value1 === "-") {
         if ((value2 === "+" || value2 === "-") && operator === "<") return false;
@@ -90,7 +96,6 @@ function determine(postfix) {
             stack.push(input);
             return;
         }
-        console.log(stack);
         let b = stack.pop();
         let a = stack.pop();
         
@@ -115,14 +120,8 @@ function determine(postfix) {
         }
 
     });
-
-    console.log(stack);
-    return stack.pop() || 0;
+    return precisionRound(stack.pop(), 16) || 0;
 }
-
-// function display(display, value, show) {
-//   return show === "value" ? value : display;
-// }
 
 function addValue(display, value) {
     if (display === "" || display === "0") {
