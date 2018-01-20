@@ -34,14 +34,6 @@ function InputPanel(props) {
   )
 }
 
-function StatePanel(props) {
-  return (
-    <div>
-      <div onClick={props.showState}>showlog</div>
-    </div>
-  )
-}
-
 class Calculator extends React.Component {
   constructor(props) {
     super(props);
@@ -54,7 +46,6 @@ class Calculator extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.clearValue = this.clearValue.bind(this);
     this.handleResult = this.handleResult.bind(this);
-    this.log = this.log.bind(this);
   }
 
   clearValue() {
@@ -74,7 +65,7 @@ class Calculator extends React.Component {
     if (result !== 0) {
       display = result.toString();
     }
-    console.log(result);
+
     this.setState({
       display: display,
       infix: infix,
@@ -82,10 +73,6 @@ class Calculator extends React.Component {
       result: result,
     });
 
-  }
-
-  log() {
-    console.log(this.state);
   }
 
   handleClick(e) {
@@ -102,7 +89,6 @@ class Calculator extends React.Component {
           onClear={this.clearValue}
           onResult={this.handleResult}
         />
-        <StatePanel showState={this.log} />
       </div>
     )
   }
