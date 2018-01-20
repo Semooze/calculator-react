@@ -94,6 +94,16 @@ describe("Add value", function () {
     expect(addValue(init)).toBe("(8 + 4)");
   });
 
+  test("add 2 * 10 expect value 2 * 10", function () {
+    init = "2 * 10";
+    expect(addValue(init)).toBe("2 * 10");
+  });
+
+  test("add 2 / 10 expect value 2 / 10", function () {
+    init = "2 / 10";
+    expect(addValue(init)).toBe("2 / 10");
+  });
+
 });
 
 describe("Transform display to infix", function () {
@@ -137,9 +147,14 @@ describe("Transform display to infix", function () {
     expect(displayToInfix(init)).toEqual([12, "+", 7, "-"]);
   });
 
-  test("take \"-8\" to [-8]", function () {
-    init = "-8";
-    expect(displayToInfix(init)).toEqual([-8]);
+  test("take \"2 * 10\" to [2, \"*\", 10]", function () {
+    init = "2 * 10";
+    expect(displayToInfix(init)).toEqual([2, "*", 10]);
+  });
+
+  test("take \"10 / 2\" to [2, \"/\", 10]", function () {
+    init = "2 / 10";
+    expect(displayToInfix(init)).toEqual([2, "/", 10]);
   });
 
 });
@@ -158,21 +173,47 @@ describe("Transform infix to postfix", function () {
     expect(infixToPostfix([])).toEqual([]);
   });
 
-  test("take 23 + to []", function () {
+  test("take [23, \"+\"] to []", function () {
     expect(infixToPostfix([23, "+"])).toEqual([]);
   });
 
-  test("take 23 + 5 to 23 5 +", function () {
+  test("take [23, \"+\", 5] to 23 5 +", function () {
     expect(infixToPostfix([23, "+", 5])).toEqual([23, 5, "+"]);
   });
 
-  test("take 10 + 2 - 8 + 3 to 10 2 + 8 - 3 +", function () {
+  test("take [10, \"+\", 2, \"-\", 8, \"+\", 3] to 10 2 + 8 - 3 +", function () {
     expect(infixToPostfix([10, "+", 2, "-", 8, "+", 3]))
       .toEqual([10, 2, "+", 8, "-", 3, "+"]);
   });
 
-  test("take 23 + 5 - to []", function () {
+  test("take [23, \"+\", 5, \"-\"] to []", function () {
     expect(infixToPostfix([23, "+", 5, "-"])).toEqual([]);
+  });
+
+  test("take [2, \"*\", 10\ to [2, 10, \"*\"]", function () {
+    expect(infixToPostfix([2, "*", 10,])).toEqual([2, 10, "*"]);
+  });
+
+  test("take [2, \"/\", 10] to [2, 10, \"/\"]", function () {
+    expect(infixToPostfix([2, "/", 10,])).toEqual([2, 10, "/"]);
+  });
+
+  test("take [10, \"+\", 2, \"*\", 8, \"-\", 3] to [10, 2, 8, \"*\", \"+\", 3,\"-\"]", function () {
+    expect(infixToPostfix([10, "+", 2, "*", 8, "-", 3])).toEqual([10, 2, 8, "*", "+", 3, "-"]);
+  });
+
+  test("take [\"(\", 1, \"+\", 2, \")\", \"/\", \"(\", 3, \"+\", 4, \")\"] to [1, 2, \"+\", 3, 4, \"+\", \"/\"]", function () {
+    expect(infixToPostfix(["(", 1, "+", 2, ")", "/", "(", 3, "+", 4, ")"])).toEqual([1, 2, "+", 3, 4, "+", "/"]);
+  });
+
+  test("take [1, \"+\", 2, \"/\", 3, \"+\", 4] to [2, 3, \"/\", 1, \"+\", 4, \"+\"]", function () {
+    expect(infixToPostfix([1, "+", 2, "/", 3, "+", 4])).toEqual([1, 2, 3, "/", "+", 4, "+"]);
+  });
+
+  test("take ["-", 7, \"+\", 9, \"*\", \"(\", \"(\", 5, \"+\", 3, \")\", \"/\", 2, \")\", \"+\", 8, \"-\", 1]" + 
+       "to [7, \"-\", 9, 5, 3, \"+\", 2, \"/\", \"*\", \"+\", 8, \"+\", 1, \"-\"]", function () {
+    expect(infixToPostfix(["-", 7, "+", 9, "*", "(", "(", 5, "+", 3, ")", "/", 2, ")", "+", 8, "-", 1]))
+      .toEqual([7, "-", 9, 5, 3, "+", 2, "/", "*", "+", 8, "+", 1, "-"]);
   });
 
 });
@@ -215,4 +256,26 @@ describe("Determine an anwser", function () {
     expect(determine([8, 8, "-", 1, "+"])).toBe(1);
   });
 
+  test("take 2 * 10 to 20", function () {
+    expect(determine([2, 10, "*"])).toBe(20);
+  });
+
+  test("take 2 / 10 to 0.2", function () {
+    expect(determine([2, 10, "/"])).toBe(0.2);
+  });
+
+  // test("take 2 + 8 * 10 to 160", function () {
+  //   expect(determine([2, 8, "+", 10, "*"])).toBe(160);
+  // });
+
+  // test("take 8 + 7 /2 to 11.5", function () {
+  //   expect(determine([8, 7, "+", 2, "/"])).toBe(11.5);
+  // });
+
 });
+
+/*Left test case
+1 Flotaing point
+2 Handle negative number in new way when tranforming it from display to infix
+3 Handle negative number in new way when determine from postfix
+*/ 

@@ -25,11 +25,11 @@ function InputPanel(props) {
       <div onClick={props.onInput} data-value="7">7</div>
       <div onClick={props.onInput} data-value="8">8</div>
       <div onClick={props.onInput} data-value="9">9</div>
-      <div onClick={props.onInput} data-value="-">*</div>
+      <div onClick={props.onInput} data-value="*">*</div>
       <div onClick={props.onInput} data-value="0">0</div>
       <div onClick={props.onInput} data-value="-">.</div>
       <div onClick={props.onResult}>=</div>
-      <div onClick={props.onInput} data-value="-">+</div>
+      <div onClick={props.onInput} data-value="/">/</div>
     </div>
   )
 }

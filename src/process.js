@@ -1,8 +1,35 @@
+function isNumber(n) {
+    return !Number.isNaN(n) && Number.isFinite(n);
+}
+
+function checkPrecedence(value1, operator, value2) {
+    if (value1 === "+" || value1 === "-") {
+        if ((value2 === "+" || value2 === "-") && operator === "<") return false;
+        if ((value2 === "+" || value2 === "-") && operator === ">") return false;
+        if ((value2 === "+" || value2 === "-") && operator === "=") return true;
+        if ((value2 === "*" || value2 === "/") && operator === "<") return true;
+        if ((value2 === "*" || value2 === "/") && operator === ">") return false;
+        if ((value2 === "*" || value2 === "/") && operator === "=") return false;
+    } 
+
+    if (value1 === "*" || value1 === "/") {
+        if ((value2 === "*" || value2 === "/") && operator === "<") return false;
+        if ((value2 === "*" || value2 === "/") && operator === ">") return false;
+        if ((value2 === "*" || value2 === "/") && operator === "=") return true;
+        if ((value2 === "+" || value2 === "-") && operator === "<") return false;
+        if ((value2 === "+" || value2 === "-") && operator === ">") return true;
+        if ((value2 === "+" || value2 === "-") && operator === "=") return false;
+    }
+
+
+    return false;
+}
+
 function displayToInfix(value) {
     if (!value) return [];
     if (typeof value !== "string") return [];
     const infix = value.split(" ")
-        .map((input) => { return parseInt(input, 10) ? parseInt(input, 10) : input });
+        .map((input) => { return parseFloat(input, 10) ? parseFloat(input, 10) : input });
     return infix.slice(-1).pop() === '' ? infix.slice(0, -1) : infix;
 }
 
@@ -10,14 +37,39 @@ function infixToPostfix(infix) {
     if (!Array.isArray(infix)) return [];
     var stack = [];
     var postfix = [];
-    if (Number.isInteger(infix.slice(-1).pop())) {
+    var lastCharactor = infix.slice(-1).pop();
+    if (isNumber(lastCharactor) || lastCharactor === ")") {
         infix.forEach((input) => {
-            if (!Number.isInteger(input)) {
-                if (stack.length) postfix.push(stack.pop());
-                stack.push(input)
+            if (!isNumber(input)) {
+                if (stack.length) {
+                    if (input === "(") {
+                        stack.push(input); 
+                    }
+                    else if (input === ")") {
+                        const stackLength = stack.length;
+                        for (let i = 0; i < stackLength; i++) {
+                            let item = stack.pop();
+                            if (item === "(") break;
+                            postfix.push(item);
+                        }
+                    } else {
+                        const stackLength = stack.length;
+                        for (let i = 0; i < stackLength; i++) {
+                            let item = stack.pop();
+                            if (item === "(" || checkPrecedence(item, "<", input)) {
+                                stack.push(item); 
+                                break;
+                            }
+                            postfix.push(item);
+                        }
+                        stack.push(input); 
+                    }
+                } else {
+                    stack.push(input);
+                }
             }
 
-            if (Number.isInteger(input)) {
+            if (isNumber(input)) {
                 postfix.push(input);
             }
         });
@@ -34,7 +86,7 @@ function determine(postfix) {
     if (postfix.length < 3) return 0;
     var stack = [];
     postfix.forEach(function (input) {
-        if (Number.isInteger(input)) {
+        if (isNumber(input)) {
             stack.push(input);
             return;
         }
@@ -49,6 +101,16 @@ function determine(postfix) {
         }
         if (input === "-") {
             c = a - b;
+            stack.push(c);
+        }
+
+        if (input === "*") {
+            c = a * b;
+            stack.push(c);
+        }
+
+        if (input === "/") {
+            c = a / b;
             stack.push(c);
         }
 
@@ -71,7 +133,7 @@ function addValue(display, value) {
         return display;
     }
 
-    if (Number.isInteger(parseInt(value, 10))) {
+    if (isNumber(parseFloat(value, 10))) {
         return display + value;
     }
 
