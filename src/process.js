@@ -31,7 +31,6 @@ function checkPrecedence(value1, operator, value2) {
         if ((value2 === "+" || value2 === "-") && operator === "=") return false;
     }
 
-
     return false;
 }
 
@@ -45,9 +44,9 @@ function displayToInfix(value) {
 
 function infixToPostfix(infix) {
     if (!Array.isArray(infix)) return [];
-    var stack = [];
-    var postfix = [];
-    var lastCharactor = infix.slice(-1).pop();
+    let stack = [];
+    let postfix = [];
+    let lastCharactor = infix.slice(-1).pop();
     if (isNumber(lastCharactor) || lastCharactor === ")") {
         infix.forEach((input) => {
             if (!isNumber(input)) {
@@ -94,7 +93,7 @@ function determine(postfix) {
 
     if (!Array.isArray(postfix)) return 0;
     if (postfix.length < 3) return 0;
-    var stack = [];
+    let stack = [];
     postfix.forEach(function (input) {
         if (isNumber(input)) {
             stack.push(input);
@@ -128,12 +127,13 @@ function determine(postfix) {
 }
 
 function addValue(display, value) {
-    if (display === "" || display === "0") {
-        return (value === "+" || value === "*" || value === "/" || value === ")") ? display : `${value}`;
-    }
 
     if (!value) {
-        return display;
+        return display === "0" ? "0" : display;
+    }
+
+    if (display === "" || display === "0") {
+        return (value === "+" || value === "*" || value === "/" || value === ")") ? display : `${value}`;
     }
 
     var lastCharacter = display.trim().split(" ").pop();

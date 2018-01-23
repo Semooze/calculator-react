@@ -9,6 +9,11 @@ describe("Add value", function () {
     expect(addValue(init, "5")).toBe("5");
   });
 
+  test("add \"\" expect value \"0\"", function () {
+    init = "0";
+    expect(addValue(init, "")).toBe("0");
+  });
+
   test("add - expect value \"-\"", function () {
     init = "0";
     expect(addValue(init, "-")).toBe("-");
@@ -165,7 +170,7 @@ describe("Add value", function () {
   });
 
   test("add undefined expect value -8", function () {
-    init = "<div></div>";
+    init = "0";
     expect(addValue(init)).toBe(init);
   });
 
@@ -217,6 +222,21 @@ describe("Add value", function () {
   test("add ( expect value 2 + ( 5 + 2", function () {
     init = "2 + ( 5 + 2";
     expect(addValue(init, "(")).toBe("2 + ( 5 + 2");
+  });
+
+  test("add . expect value 2 + ( 5 + 2.", function () {
+    init = "2 + ( 5 + 2";
+    expect(addValue(init, ".")).toBe("2 + ( 5 + 2.");
+  });
+
+  test("add 3 expect value 2 + ( 5 + 2.3", function () {
+    init = "2 + ( 5 + 2.";
+    expect(addValue(init, "3")).toBe("2 + ( 5 + 2.3");
+  });
+
+  test("add . expect value \"2 + ( .\"", function () {
+    init = "2 + ( ";
+    expect(addValue(init, ".")).toBe("2 + ( .");
   });
 
 });
