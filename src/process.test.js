@@ -224,20 +224,20 @@ describe("Add value", function () {
     expect(addValue(init, "(")).toBe("2 + ( 5 + 2");
   });
 
-  test("add . expect value 2 + ( 5 + 2.", function () {
-    init = "2 + ( 5 + 2";
-    expect(addValue(init, ".")).toBe("2 + ( 5 + 2.");
-  });
+  // test("add . expect value 2 + ( 5 + 2.", function () {
+  //   init = "2 + ( 5 + 2";
+  //   expect(addValue(init, ".")).toBe("2 + ( 5 + 2.");
+  // });
 
   test("add 3 expect value 2 + ( 5 + 2.3", function () {
     init = "2 + ( 5 + 2.";
     expect(addValue(init, "3")).toBe("2 + ( 5 + 2.3");
   });
 
-  test("add . expect value \"2 + ( .\"", function () {
-    init = "2 + ( ";
-    expect(addValue(init, ".")).toBe("2 + ( .");
-  });
+  // test("add . expect value \"2 + ( .\"", function () {
+  //   init = "2 + ( ";
+  //   expect(addValue(init, ".")).toBe("2 + ( .");
+  // });
 
 });
 
