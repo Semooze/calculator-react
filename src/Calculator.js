@@ -1,10 +1,33 @@
 import React from 'react';
 import './Calculator.css';
 import { addValue, displayToInfix, infixToPostfix, determine } from './process';
+import PropTypes from 'prop-types';
 
 function Display(props) {
   return <div className="monitor-panel">{props.display}</div>;
 }
+
+ClearButton.PropTypes = {
+  onClear: PropTypes.func.isRequired
+} 
+
+function ClearButton(props) {
+  return <div onClick={props.onClear}>Cls</div>
+}
+
+DetermineButton.PropTypes = {
+  onSubmit: PropTypes.func.isRequired
+} 
+
+function DetermineButton (props) {
+  return <div onClick={props.onSubmit}>=</div>
+}
+
+InputPanel.PropTypes = {
+  onInput: PropTypes.func.isRequired,
+  onClear: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired
+} 
 
 function InputPanel(props) {
 
@@ -13,7 +36,7 @@ function InputPanel(props) {
       <div onClick={props.onInput} data-value="(">(</div>
       <div onClick={props.onInput} data-value=")">)</div>
       <div onClick={props.onInput} data-value="0"></div>
-      <div onClick={props.onClear}>Cls</div>
+      <ClearButton onClear={props.onClear} />
       <div onClick={props.onInput} data-value="1">1</div>
       <div onClick={props.onInput} data-value="2">2</div>
       <div onClick={props.onInput} data-value="3">3</div>
@@ -28,13 +51,14 @@ function InputPanel(props) {
       <div onClick={props.onInput} data-value="*">*</div>
       <div onClick={props.onInput} data-value="0">0</div>
       <div onClick={props.onInput} data-value="0"></div>
-      <div onClick={props.onResult}>=</div>
+      <DetermineButton onSubmit={props.onSubmit} />
       <div onClick={props.onInput} data-value="/">/</div>
     </div>
   )
 }
 
 class Calculator extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -43,12 +67,12 @@ class Calculator extends React.Component {
       result: 0,
       display: "0"
     };
-    this.handleClick = this.handleClick.bind(this);
-    this.clearValue = this.clearValue.bind(this);
-    this.handleResult = this.handleResult.bind(this);
+    this.handleInput = this.handleInput.bind(this);
+    this.handleClear = this.handleClear.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  clearValue() {
+  handleClear() {
     this.setState({
       display: "0",
       infix: [],
@@ -57,7 +81,7 @@ class Calculator extends React.Component {
     });
   }
 
-  handleResult() {
+  handleSubmit() {
     const infix = displayToInfix(this.state.display);
     const postfix = infixToPostfix(infix);
     const result = determine(postfix);
@@ -75,7 +99,7 @@ class Calculator extends React.Component {
 
   }
 
-  handleClick(e) {
+  handleInput(e) {
     const display = addValue(this.state.display, e.target.getAttribute('data-value'));
     this.setState({ display: display });
   }
@@ -85,9 +109,9 @@ class Calculator extends React.Component {
       <div className="calculator">
         <Display display={this.state.display} />
         <InputPanel
-          onInput={this.handleClick}
-          onClear={this.clearValue}
-          onResult={this.handleResult}
+          onInput={this.handleInput}
+          onClear={this.handleClear}
+          onSubmit={this.handleSubmit}
         />
       </div>
     )
