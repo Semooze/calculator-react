@@ -7,7 +7,7 @@ function Display(props) {
   return <div className="monitor-panel">{props.display}</div>;
 }
 
-ClearButton.PropTypes = {
+ClearButton.propTypes = {
   onClear: PropTypes.func.isRequired
 } 
 
@@ -15,7 +15,7 @@ function ClearButton(props) {
   return <div onClick={props.onClear}>Cls</div>
 }
 
-DetermineButton.PropTypes = {
+DetermineButton.propTypes = {
   onSubmit: PropTypes.func.isRequired
 } 
 
@@ -23,7 +23,7 @@ function DetermineButton (props) {
   return <div onClick={props.onSubmit}>=</div>
 }
 
-InputPanel.PropTypes = {
+InputPanel.propTypes = {
   onInput: PropTypes.func.isRequired,
   onClear: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired
